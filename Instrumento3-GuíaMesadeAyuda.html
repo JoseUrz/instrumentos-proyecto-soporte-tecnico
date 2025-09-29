@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía para Grupo Focal - Personal de Mesa de Ayuda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #16a085;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #16a085;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .instrument-info {
+            background: #e8f8f5;
+            padding: 20px;
+            border-left: 5px solid #1abc9c;
+            margin-bottom: 30px;
+            border-radius: 3px;
+        }
+        
+        .instrument-info h3 {
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+        
+        .instrument-info p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .moderator-instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .moderator-instructions h4 {
+            color: #856404;
+            margin-bottom: 12px;
+        }
+        
+        .moderator-instructions ul {
+            margin-left: 20px;
+        }
+        
+        .moderator-instructions li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        
+        .session-metadata {
+            background: #e9ecef;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .metadata-field {
+            display: flex;
+            align-items: center;
+        }
+        
+        .metadata-field label {
+            font-weight: 600;
+            min-width: 130px;
+        }
+        
+        .metadata-field input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+            background: white;
+        }
+        
+        .participants-list {
+            background: #f8f9fa;
+            border: 2px solid #16a085;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .participants-list h3 {
+            color: #16a085;
+            margin-bottom: 15px;
+        }
+        
+        .participant-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 150px 100px;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .participant-row input {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .time-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .question-block {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 5px solid #1abc9c;
+            border-radius: 3px;
+            page-break-inside: avoid;
+        }
+        
+        .question-type {
+            display: inline-block;
+            background: #1abc9c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .main-question {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .probe-questions {
+            background: #d1ecf1;
+            border-left: 3px solid #17a2b8;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        
+        .probe-questions strong {
+            color: #0c5460;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .probe-questions ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+        
+        .probe-questions li {
+            margin-bottom: 5px;
+            color: #004085;
+        }
+        
+        .response-area {
+            background: white;
+            border: 2px solid #dee2e6;
+            padding: 15px;
+            min-height: 120px;
+            margin-top: 12px;
+            border-radius: 3px;
+        }
+        
+        .response-area.large {
+            min-height: 180px;
+        }
+        
+        .group-dynamics {
+            background: #fff3e6;
+            border: 2px dashed #ff9800;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+        }
+        
+        .group-dynamics h5 {
+            color: #e65100;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .dynamics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .dynamics-item {
+            font-size: 13px;
+        }
+        
+        .dynamics-item strong {
+            color: #d84315;
+        }
+        
+        .intro-section {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .intro-section h3 {
+            color: #1565c0;
+            margin-bottom: 12px;
+        }
+        
+        .intro-checklist {
+            margin-left: 20px;
+        }
+        
+        .intro-checklist li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .closure-section {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        
+        .closure-section h3 {
+            color: #7b1fa2;
+            margin-bottom: 12px;
+        }
+        
+        .observer-notes {
+            background: #fffde7;
+            border: 2px solid #fbc02d;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+        }
+        
+        .observer-notes h5 {
+            color: #f57f17;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            background: #1abc9c;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #16a085;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .participant-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dynamics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Guía para Grupo Focal con Personal de Mesa de Ayuda (Service Desk)</h1>
+            <p class="subtitle">Instrumento 3 - Proyecto: Implementar y Optimizar el Soporte Técnico en Campo</p>
+            <p class="subtitle">Corporación Unificada Nacional de Educación Superior - CUN</p>
+            <p class="subtitle">Especialización en Transformación Digital</p>
+        </div>
+        
+        <div class="instrument-info">
+            <h3>Información del Instrumento</h3>
+            <p><strong>Objetivo:</strong> Facilitar un espacio de discusión grupal que permita comprender las dinámicas de escalamiento, identificar criterios de decisión, barreras operativas y oportunidades de mejora desde la perspectiva del primer contacto con el usuario.</p>
+            <p><strong>Población objetivo:</strong> Personal de mesa de ayuda (Nivel 1 y Nivel 2) responsable de la recepción, clasificación inicial, diagnóstico y escalamiento de incidentes técnicos.</p>
+            <p><strong>Formato de aplicación:</strong> Sesión grupal presencial o virtual</p>
+            <p><strong>Número de participantes:</strong> 6-10 personas</p>
+            <p><strong>Duración estimada:</strong> 90-120 minutos</p>
+        </div>
+        
+        <div class="moderator-instructions no-print">
+            <h4>Instrucciones para el Moderador</h4>
+            <ul>
+                <li><strong>Antes de la sesión:</strong> Prepare el espacio físico o la plataforma virtual, verifique equipos de grabación, prepare materiales de apoyo</li>
+                <li><strong>Rol del moderador:</strong> Facilitar la discusión, mantener el enfoque, asegurar participación equitativa, evitar imponer opiniones</li>
+                <li><strong>Manejo del tiempo:</strong> Monitoree el tiempo asignado a cada bloque y adapte según el flujo natural de la conversación</li>
+                <li><strong>Participación:</strong> Invite a participar a personas calladas, controle diplomáticamente a participantes dominantes</li>
+                <li><strong>Neutralidad:</strong> Mantenga una postura neutral, no juzgue respuestas, valide todas las perspectivas</li>
+                <li><strong>Registro:</strong> Grabe la sesión (con consentimiento) y tome notas sobre dinámicas grupales, lenguaje no verbal, consensos y disensos</li>
+                <li><strong>Flexibilidad:</strong> Use esta guía como referencia, pero permita que surjan temas relevantes no anticipados</li>
+            </ul>
+        </div>
+        
+        <div class="button-container no-print">
+            <button class="btn" onclick="window.print()">📄 Imprimir Guía</button>
+            <button class="btn btn-secondary" onclick="guardarNotas()">💾 Guardar Notas</button>
+        </div>
+        
+        <div class="session-metadata">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">Datos de la Sesión</h3>
+            <div class="metadata-grid">
+                <div class="metadata-field">
+                    <label>Fecha:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Hora inicio:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Hora fin:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Modalidad:</label>
+                    <input type="text" placeholder="Presencial / Virtual" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Lugar/Plataforma:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Moderador:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>Observador:</label>
+                    <input type="text" contenteditable="true">
+                </div>
+                <div class="metadata-field">
+                    <label>¿Se grabó?:</label>
+                    <input type="text" placeholder="Sí / No" contenteditable="true">
+                </div>
+            </div>
+        </div>
+        
+        <div class="participants-list">
+            <h3>Registro de Participantes</h3>
+            <div class="participant-row" style="font-weight: bold; border-bottom: 2px solid #16a085; padding-bottom: 8px; margin-bottom: 12px;">
+                <div>#</div>
+                <div>Nombre</div>
+                <div>Nivel (1 o 2)</div>
+                <div>Años experiencia</div>
+            </div>
+            <div class="participant-row">
+                <div>1</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>2</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>3</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>4</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>5</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>6</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>7</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>8</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>9</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+            <div class="participant-row">
+                <div>10</div>
+                <input type="text" placeholder="Nombre completo">
+                <input type="text" placeholder="Nivel 1 / Nivel 2">
+                <input type="text" placeholder="Años">
+            </div>
+        </div>
+        
+        <!-- Introducción -->
+        <div class="intro-section">
+            <h3>Introducción (10 minutos)</h3>
+            <ul class="intro-checklist">
+                <li>☐ Bienvenida y agradecimiento por la participación</li>
+                <li>☐ Explicación de los objetivos del grupo focal</li>
+                <li>☐ Establecimiento de reglas básicas (respeto, confidencialidad, participación equitativa, no hay respuestas correctas o incorrectas)</li>
+                <li>☐ Firma de consentimientos informados (si aplica)</li>
+                <li>☐ Presentación breve de cada participante (nombre, cargo, tiempo en la organización)</li>
+                <li>☐ Inicio de grabación (con autorización explícita)</li>
+            </ul>
+            <div class="response-area" style="margin-top: 15px;">
+                <strong>Notas sobre la introducción y presentaciones:</strong>
+                <div contenteditable="true" style="min-height: 80px; padding: 10px;"></div>
+            </div>
+        </div>
+        
+        <!-- Bloque 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 1: Proceso Actual de Recepción y Clasificación de Incidentes</span>
+                <span class="time-badge">20 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 1</span>
+                <div class="main-question">
+                    ¿Podrían describir paso a paso el proceso que siguen desde que reciben un incidente hasta que toman la decisión de escalarlo a soporte en sitio?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización (usar según necesidad):</strong>
+                    <ul>
+                        <li>¿Qué canales de atención utilizan los clientes con mayor frecuencia? (llamada, chat, autogestión)</li>
+                        <li>¿Existen diferencias en los tiempos de respuesta según el canal utilizado?</li>
+                        <li>¿Cómo registran y documentan la información inicial del incidente?</li>
+                        <li>¿Qué información específica capturan antes de escalar un caso?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales:</h5>
+                    <div class="dynamics-grid">
+                        <div class="dynamics-item">
+                            <strong>Consensos:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                        <div class="dynamics-item">
+                            <strong>Disensos:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 2</span>
+                <div class="main-question">
+                    ¿Qué criterios o procedimientos utilizan para determinar si un incidente debe ser escalado al Nivel 2 o directamente a soporte en sitio?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Existen protocolos o guías documentadas para esta decisión?</li>
+                        <li>¿Qué factores consideran más importantes al momento de escalar?</li>
+                        <li>¿Sienten que tienen la capacidad técnica suficiente para realizar un diagnóstico inicial preciso?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales:</h5>
+                    <div class="dynamics-grid">
+                        <div class="dynamics-item">
+                            <strong>Participantes más activos:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                        <div class="dynamics-item">
+                            <strong>Lenguaje no verbal relevante:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloque 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 2: Herramientas Tecnológicas y Capacidades de Resolución Remota</span>
+                <span class="time-badge">20 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 3</span>
+                <div class="main-question">
+                    ¿Qué herramientas tecnológicas utilizan actualmente para intentar resolver incidentes de forma remota antes de escalar a soporte en sitio?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Con qué frecuencia utilizan Remote Help, Microsoft Teams o System Center?</li>
+                        <li>¿Qué limitaciones técnicas encuentran al intentar resolver casos remotamente?</li>
+                        <li>¿Han recibido capacitación suficiente en el uso de estas herramientas?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales:</h5>
+                    <div contenteditable="true" style="min-height: 80px; border: 1px solid #ddd; padding: 8px; margin-top: 8px; background: white;"></div>
+                </div>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 4</span>
+                <div class="main-question">
+                    En su experiencia, ¿qué porcentaje de los casos que escalan a soporte en sitio consideran que podrían haberse resuelto de forma remota? ¿Qué impide que se resuelvan remotamente?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Pueden dar ejemplos específicos de casos escalados innecesariamente?</li>
+                        <li>¿Qué tipo de incidentes consideran que SIEMPRE requieren presencia física?</li>
+                        <li>¿Qué barreras organizacionales o técnicas dificultan la resolución remota?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="observer-notes">
+                    <h5>Notas del observador:</h5>
+                    <div contenteditable="true" style="min-height: 70px; padding: 8px; border: 1px solid #ddd; margin-top: 5px; background: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloque 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 3: Presión Operativa y Cumplimiento de SLA</span>
+                <span class="time-badge">15 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 5</span>
+                <div class="main-question">
+                    ¿Cómo afecta la presión por cumplir con los SLA establecidos (5h, 8h, 16h, 24h) en sus decisiones de escalamiento?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Sienten que a veces escalan casos más rápido de lo necesario para "quitarse la responsabilidad"?</li>
+                        <li>¿Los indicadores de desempeño actuales incentivan o desincentivan intentar resolver casos remotamente?</li>
+                        <li>¿Cómo se mide su desempeño individual? ¿Esto afecta sus decisiones de escalamiento?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales:</h5>
+                    <div class="dynamics-grid">
+                        <div class="dynamics-item">
+                            <strong>Temas sensibles identificados:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                        <div class="dynamics-item">
+                            <strong>Nivel de apertura del grupo:</strong>
+                            <div contenteditable="true" style="min-height: 60px; border: 1px solid #ddd; padding: 5px; margin-top: 5px; background: white;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 6</span>
+                <div class="main-question">
+                    ¿Con qué frecuencia reciben retroalimentación de los técnicos de campo sobre casos que fueron resueltos sin necesidad de presencia física?
+                </div>
+                
+                <div class="response-area" contenteditable="true"></div>
+                
+                <div class="observer-notes">
+                    <h5>Notas del observador:</h5>
+                    <div contenteditable="true" style="min-height: 70px; padding: 8px; border: 1px solid #ddd; margin-top: 5px; background: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloque 4 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 4: Comunicación y Coordinación con Soporte en Sitio</span>
+                <span class="time-badge">15 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 7</span>
+                <div class="main-question">
+                    ¿Cómo describirían la comunicación y coordinación actual entre la mesa de ayuda y el equipo de soporte en sitio?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Existe un canal de comunicación fluido y efectivo?</li>
+                        <li>¿Reciben retroalimentación sobre la calidad de la información que proporcionan al escalar casos?</li>
+                        <li>¿Qué mejoras consideran necesarias en esta coordinación?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales:</h5>
+                    <div contenteditable="true" style="min-height: 80px; border: 1px solid #ddd; padding: 8px; margin-top: 8px; background: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloque 5 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 5: Satisfacción del Cliente y Calidad del Servicio</span>
+                <span class="time-badge">10 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 8</span>
+                <div class="main-question">
+                    Desde su interacción directa con los clientes, ¿qué percepciones tienen respecto a las preferencias de los usuarios sobre atención remota vs. presencial?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Los clientes manifiestan preferencia por un tipo de atención sobre otro?</li>
+                        <li>¿Cómo reaccionan los clientes cuando se les ofrece soporte remoto?</li>
+                        <li>¿Han recibido quejas o comentarios positivos sobre alguna modalidad específica?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="observer-notes">
+                    <h5>Notas del observador:</h5>
+                    <div contenteditable="true" style="min-height: 70px; padding: 8px; border: 1px solid #ddd; margin-top: 5px; background: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloque 6 -->
+        <div class="section">
+            <div class="section-header">
+                <span>Bloque Temático 6: Oportunidades de Mejora y Transformación Digital</span>
+                <span class="time-badge">15 minutos</span>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 9</span>
+                <div class="main-question">
+                    Si tuvieran la oportunidad de rediseñar el proceso actual, ¿qué cambios implementarían para reducir desplazamientos innecesarios y mejorar la eficiencia del soporte técnico?
+                </div>
+                
+                <div class="probe-questions">
+                    <strong>Preguntas de profundización:</strong>
+                    <ul>
+                        <li>¿Qué herramientas digitales específicas les gustaría tener disponibles?</li>
+                        <li>¿Qué capacitaciones adicionales necesitarían?</li>
+                        <li>¿Qué barreras organizacionales o culturales identifican para implementar estos cambios?</li>
+                    </ul>
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="group-dynamics">
+                    <h5>Observaciones sobre dinámicas grupales - Co-creación:</h5>
+                    <div contenteditable="true" style="min-height: 100px; border: 1px solid #ddd; padding: 8px; margin-top: 8px; background: white;"></div>
+                </div>
+            </div>
+            
+            <div class="question-block">
+                <span class="question-type">PREGUNTA GUÍA 10</span>
+                <div class="main-question">
+                    ¿Están dispuestos a adoptar nuevas metodologías y tecnologías que impliquen cambios en sus funciones actuales? ¿Qué factores facilitarían o dificultarían esta adopción?
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+                
+                <div class="observer-notes">
+                    <h5>Notas del observador:</h5>
+                    <div contenteditable="true" style="min-height: 70px; padding: 8px; border: 1px solid #ddd; margin-top: 5px; background: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cierre -->
+        <div class="closure-section">
+            <h3>Cierre y Reflexiones Finales (10 minutos)</h3>
+            
+            <div class="question-block" style="background: white; border-left: 5px solid #9c27b0;">
+                <span class="question-type" style="background: #9c27b0;">PREGUNTA GUÍA 11</span>
+                <div class="main-question">
+                    ¿Hay algún aspecto importante relacionado con el proceso de escalamiento, gestión remota o soporte técnico que no hayamos discutido y consideren relevante mencionar?
+                </div>
+                
+                <div class="response-area large" contenteditable="true"></div>
+            </div>
+            
+            <ul class="intro-checklist" style="margin-top: 20px;">
+                <li>☐ Agradecimiento por la participación y valiosas contribuciones</li>
+                <li>☐ Explicación de los próximos pasos del proyecto</li>
+                <li>☐ Espacio para comentarios o preguntas finales</li>
+                <li>☐ Información sobre cómo acceder a resultados finales (si aplica)</li>
+                <li>☐ Cierre formal de la grabación</li>
+            </ul>
+        </div>
+        
+        <!-- Reflexión Post-Sesión -->
+        <div class="section">
+            <div class="section-header" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%);">
+                <span>Reflexión Post-Sesión del Moderador y Observador</span>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Síntesis General de la Sesión</h4>
+                <div class="response-area large" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Temas Emergentes No Anticipados</h4>
+                <div class="response-area" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Consensos Principales Identificados</h4>
+                <div class="response-area" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Disensos o Debates Significativos</h4>
+                <div class="response-area" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Dinámicas Grupales Relevantes (liderazgos, conflictos, colaboración)</h4>
+                <div class="response-area" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Hallazgos Clave para el Análisis</h4>
+                <div class="response-area large" contenteditable="true"></div>
+            </div>
+            
+            <div class="question-block">
+                <h4 style="color: #495057; margin-bottom: 15px;">Recomendaciones para Siguientes Pasos de Investigación</h4>
+                <div class="response-area" contenteditable="true"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Proyecto: Implementar y Optimizar el Soporte Técnico en Campo mediante Soluciones Digitales</p>
+            <p>Corporación Unificada Nacional de Educación Superior - CUN | Especialización en Transformación Digital</p>
+            <p>Investigador: Jose Jesus Urzola Gomez | Septiembre 2025</p>
+        </div>
+    </div>
+    
+    <script>
+        function guardarNotas() {
+            const container = document.querySelector('.container');
+            const html = container.innerHTML;
+            const timestamp = new Date().toISOString().slice(0,10);
+            localStorage.setItem('grupo_focal_' + timestamp, html);
+            alert('✅ Notas del grupo focal guardadas correctamente.\n\nFecha: ' + timestamp + '\n\nRecuerde también guardar como PDF usando la función de imprimir.');
+        }
+        
+        // Auto-guardar cada 5 minutos
+        setInterval(function() {
+            const container = document.querySelector('.container');
+            const html = container.innerHTML;
+            localStorage.setItem('grupo_focal_autosave', html);
+            console.log('Auto-guardado:', new Date().toLocaleTimeString());
+        }, 300000);
+        
+        // Cargar auto-guardado si existe
+        window.addEventListener('load', function() {
+            const autoSaved = localStorage.getItem('grupo_focal_autosave');
+            if (autoSaved) {
+                if (confirm('Se encontró un auto-guardado previo. ¿Desea restaurarlo?')) {
+                    document.querySelector('.container').innerHTML = autoSaved;
+                }
+            }
+        });
+        
+        // Advertencia al cerrar
+        window.addEventListener('beforeunload', function(e) {
+            const editableElements = document.querySelectorAll('[contenteditable="true"]');
+            let hasContent = false;
+            
+            editableElements.forEach(elem => {
+                if (elem.textContent.trim().length > 0) {
+                    hasContent = true;
+                }
+            });
+            
+            if (hasContent) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

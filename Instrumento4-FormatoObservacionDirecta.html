@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formato de Observación Directa del Proceso de Escalamiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: #f5f5f5;
+            padding: 15px;
+            font-size: 13px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #ff6f00;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #e65100;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .instrument-info {
+            background: #fff3e0;
+            padding: 15px;
+            border-left: 5px solid #ff9800;
+            margin-bottom: 25px;
+            border-radius: 3px;
+        }
+        
+        .instrument-info h3 {
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .instrument-info p {
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        
+        .observer-instructions {
+            background: #e8eaf6;
+            border: 2px solid #3f51b5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .observer-instructions h4 {
+            color: #283593;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .observer-instructions ul {
+            margin-left: 20px;
+        }
+        
+        .observer-instructions li {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .session-metadata {
+            background: #eceff1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #b0bec5;
+        }
+        
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .metadata-field {
+            display: flex;
+            align-items: center;
+        }
+        
+        .metadata-field label {
+            font-weight: 600;
+            min-width: 100px;
+            font-size: 12px;
+        }
+        
+        .metadata-field input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #ff6f00 0%, #ff9800 100%);
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        
+        .cases-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 11px;
+        }
+        
+        .cases-table th {
+            background: #ff9800;
+            color: white;
+            padding: 8px 5px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #f57c00;
+            font-size: 11px;
+        }
+        
+        .cases-table td {
+            padding: 6px 5px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+        
+        .cases-table input[type="text"],
+        .cases-table input[type="time"] {
+            width: 100%;
+            border: none;
+            padding: 3px;
+            font-size: 11px;
+        }
+        
+        .cases-table input[type="text"]:focus,
+        .cases-table input[type="time"]:focus {
+            outline: 2px solid #ff9800;
+            background: #fffbf0;
+        }
+        
+        .cases-table select {
+            width: 100%;
+            border: none;
+            padding: 3px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .cases-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        .cases-table tr:hover {
+            background: #fff3e0;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        .analysis-table th {
+            background: #37474f;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #263238;
+        }
+        
+        .analysis-table td {
+            padding: 8px;
+            border: 1px solid #cfd8dc;
+            background: white;
+        }
+        
+        .analysis-table input {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        .observation-box {
+            background: #f5f5f5;
+            border: 2px solid #9e9e9e;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .observation-box h4 {
+            color: #424242;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .observation-box textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #bdbdbd;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 12px;
+            resize: vertical;
+        }
+        
+        .unnecessary-cases {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .unnecessary-cases h4 {
+            color: #c62828;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .case-card {
+            background: white;
+            border: 1px solid #ef5350;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 3px;
+        }
+        
+        .case-card label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #d32f2f;
+        }
+        
+        .case-card input,
+        .case-card textarea {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .case-card textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        
+        .summary-stats {
+            background: #e1f5fe;
+            border: 2px solid #0288d1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .summary-stats h4 {
+            color: #01579b;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .stat-box {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
+            text-align: center;
+            border: 1px solid #81d4fa;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0277bd;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #546e7a;
+            margin-top: 5px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #eceff1;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            background: #ff9800;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: #607d8b;
+        }
+        
+        .btn-secondary:hover {
+            background: #455a64;
+        }
+        
+        .btn-success {
+            background: #4caf50;
+        }
+        
+        .btn-success:hover {
+            background: #388e3c;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 11px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 15px;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .cases-table {
+                font-size: 9px;
+            }
+            
+            .cases-table th,
+            .cases-table td {
+                padding: 4px 3px;
+            }
+        }
+        
+        @media (max-width: 1000px) {
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Formato de Observación Directa del Proceso de Escalamiento</h1>
+            <p class="subtitle">Instrumento 4 - Proyecto: Implementar y Optimizar el Soporte Técnico en Campo</p>
+            <p class="subtitle">Corporación Unificada Nacional de Educación Superior - CUN</p>
+            <p class="subtitle">Especialización en Transformación Digital</p>
+        </div>
+        
+        <div class="instrument-info">
+            <h3>Información del Instrumento</h3>
+            <p><strong>Objetivo:</strong> Registrar de manera sistemática y objetiva el proceso real de escalamiento de incidentes desde la mesa de ayuda hacia soporte en sitio, documentando tiempos, decisiones, comunicaciones y características técnicas de los casos.</p>
+            <p><strong>Metodología:</strong> Observación no participante durante jornadas laborales completas</p>
+            <p><strong>Duración total recomendada:</strong> Mínimo 5 días de observación (40 horas totales)</p>
+            <p><strong>Área observada:</strong> Mesa de ayuda (Nivel 1 y Nivel 2) y coordinación con soporte en campo</p>
+        </div>
+        
+        <div class="observer-instructions no-print">
+            <h4>Instrucciones para el Observador</h4>
+            <ul>
+                <li><strong>Postura neutral:</strong> Registre objetivamente sin interferir en las actividades del personal</li>
+                <li><strong>Registro en tiempo real:</strong> Documente los casos mientras ocurren para evitar sesgos de memoria</li>
+                <li><strong>Confidencialidad:</strong> No registre información sensible de clientes (nombres, datos personales)</li>
+                <li><strong>Atención a detalles:</strong> Observe no solo acciones, sino también comunicación verbal, lenguaje corporal, presión del entorno</li>
+                <li><strong>Numeración correlativa:</strong> Asigne un número único a cada caso observado para facilitar análisis posterior</li>
+                <li><strong>Notas contextuales:</strong> Registre factores ambientales que puedan influir (hora pico, sistema caído, ausencias de personal)</li>
+            </ul>
+        </div>
+        
+        <div class="button-container no-print">
+            <button class="btn" onclick="window.print()">📄 Imprimir Formato</button>
+            <button class="btn btn-secondary" onclick="guardarObservacion()">💾 Guardar Observación</button>
+            <button class="btn btn-success" onclick="calcularEstadisticas()">📊 Calcular Estadísticas</button>
+        </div>
+        
+        <div class="session-metadata">
+            <h3 style="margin-bottom: 12px; color: #37474f; font-size: 16px;">Datos de la Sesión de Observación</h3>
+            <div class="metadata-grid">
+                <div class="metadata-field">
+                    <label>Fecha:</label>
+                    <input type="date" id="fecha">
+                </div>
+                <div class="metadata-field">
+                    <label>Hora inicio:</label>
+                    <input type="time" id="hora_inicio">
+                </div>
+                <div class="metadata-field">
+                    <label>Hora fin:</label>
+                    <input type="time" id="hora_fin">
+                </div>
+                <div class="metadata-field">
+                    <label>Observador:</label>
+                    <input type="text" id="observador">
+                </div>
+                <div class="metadata-field">
+                    <label>Área observada:</label>
+                    <input type="text" id="area" placeholder="Mesa Nivel 1/2">
+                </div>
+                <div class="metadata-field">
+                    <label>Turno:</label>
+                    <input type="text" id="turno" placeholder="Mañana/Tarde/Noche">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabla de casos observados -->
+        <div class="section">
+            <div class="section-header">Registro de Casos Observados</div>
+            
+            <p style="margin-bottom: 15px; font-style: italic; color: #666;">
+                <strong>Instrucción:</strong> Complete una fila por cada caso observado. Use códigos: <strong>Canal:</strong> L=Llamada, C=Chat, A=Autogestión | 
+                <strong>Tipo:</strong> SW=Software, HW=Hardware, RED=Red, IMP=Impresoras, CFG=Configuración, REMP=Reemplazo | 
+                <strong>Acción:</strong> RN1=Resuelto Nivel 1, EN2=Escalado Nivel 2, ECAMPO=Escalado Campo
+            </p>
+            
+            <table class="cases-table" id="casesTable">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">N°</th>
+                        <th style="width: 60px;">Hora</th>
+                        <th style="width: 50px;">Canal</th>
+                        <th style="width: 100px;">Tipo Incidente</th>
+                        <th style="width: 150px;">Diagnóstico Inicial</th>
+                        <th style="width: 80px;">Acción</th>
+                        <th style="width: 100px;">Herramienta Remota</th>
+                        <th style="width: 60px;">Tiempo (min)</th>
+                        <th style="width: 180px;">Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody id="casesTableBody">
+                    <!-- Filas dinámicas -->
+                    <tr>
+                        <td>001</td>
+                        <td><input type="time"></td>
+                        <td>
+                            <select>
+                                <option value="">-</option>
+                                <option value="L">Llamada</option>
+                                <option value="C">Chat</option>
+                                <option value="A">Autogestión</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="">-</option>
+                                <option value="SW">Software</option>
+                                <option value="HW">Hardware</option>
+                                <option value="RED">Red</option>
+                                <option value="IMP">Impresoras</option>
+                                <option value="CFG">Configuración</option>
+                                <option value="REMP">Reemplazo</option>
+                            </select>
+                        </td>
+                        <td><input type="text" placeholder="Descripción breve"></td>
+                        <td>
+                            <select class="accion-select">
+                                <option value="">-</option>
+                                <option value="RN1">Resuelto N1</option>
+                                <option value="EN2">Escalado N2</option>
+                                <option value="ECAMPO">Escalado Campo</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                <option value="">Ninguna</option>
+                                <option value="RH">Remote Help</option>
+                                <option value="Teams">Teams</option>
+                                <option value="SC">System Center</option>
+                            </select>
+                        </td>
+                        <td><input type="text" placeholder="15"></td>
+                        <td><input type="text" placeholder="Contexto relevante"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button class="btn no-print" onclick="agregarFila()" style="margin-top: 10px;">+ Agregar Caso</button>
+        </div>
+        
+        <!-- Estadísticas del día -->
+        <div class="summary-stats">
+            <h4>Resumen Estadístico de la Sesión</h4>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-casos">0</span>
+                    <span class="stat-label">Total Casos</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="resueltos-n1">0</span>
+                    <span class="stat-label">Resueltos N1</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="escalados-n2">0</span>
+                    <span class="stat-label">Escalados N2</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="escalados-campo">0</span>
+                    <span class="stat-label">Escalados Campo</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Análisis por tipo de incidente -->
+        <div class="section">
+            <div class="section-header">Categorización de Tipos de Incidentes Observados</div>
+            
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Tipo de Incidente</th>
+                        <th style="width: 100px;">Frecuencia</th>
+                        <th style="width: 120px;">% Resuelto Remotamente</th>
+                        <th style="width: 120px;">% Escalado a Campo</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Problemas de software/aplicaciones</td>
+                        <td><input type="text" id="freq-sw"></td>
+                        <td><input type="text" id="remote-sw"></td>
+                        <td><input type="text" id="campo-sw"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Fallas de hardware (periféricos)</td>
+                        <td><input type="text" id="freq-hw"></td>
+                        <td><input type="text" id="remote-hw"></td>
+                        <td><input type="text" id="campo-hw"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Problemas de conectividad/red</td>
+                        <td><input type="text" id="freq-red"></td>
+                        <td><input type="text" id="remote-red"></td>
+                        <td><input type="text" id="campo-red"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Configuración de equipos</td>
+                        <td><input type="text" id="freq-cfg"></td>
+                        <td><input type="text" id="remote-cfg"></td>
+                        <td><input type="text" id="campo-cfg"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Reemplazo de equipos</td>
+                        <td><input type="text" id="freq-remp"></td>
+                        <td><input type="text" id="remote-remp"></td>
+                        <td><input type="text" id="campo-remp"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Problemas con impresoras</td>
+                        <td><input type="text" id="freq-imp"></td>
+                        <td><input type="text" id="remote-imp"></td>
+                        <td><input type="text" id="campo-imp"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Otros</td>
+                        <td><input type="text" id="freq-otros"></td>
+                        <td><input type="text" id="remote-otros"></td>
+                        <td><input type="text" id="campo-otros"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Observaciones sobre criterios -->
+        <div class="section">
+            <div class="section-header">Observaciones sobre Criterios de Escalamiento</div>
+            
+            <div class="observation-box">
+                <h4>1. Claridad en los criterios de escalamiento</h4>
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                    ¿El personal demuestra comprensión clara de cuándo escalar? ¿Existen dudas o consultas frecuentes? ¿Se observa aplicación consistente de criterios?
+                </p>
+                <textarea placeholder="Registre sus observaciones aquí..."></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>2. Uso de herramientas de soporte remoto</h4>
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                    ¿Se intentan soluciones remotas antes de escalar? ¿Qué herramientas se utilizan con mayor frecuencia? ¿Se observan limitaciones técnicas o de conocimiento?
+                </p>
+                <textarea placeholder="Registre sus observaciones aquí..."></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>3. Comunicación y coordinación</h4>
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                    ¿Cómo se comunica la decisión de escalamiento? ¿Qué información se transmite al equipo de campo? ¿Existe retroalimentación bidireccional?
+                </p>
+                <textarea placeholder="Registre sus observaciones aquí..."></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>4. Presión operativa y tiempos</h4>
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                    ¿Se observa presión por cerrar casos rápidamente? ¿Los SLA parecen influir en las decisiones de escalamiento? ¿Hay diferencias según el canal de atención?
+                </p>
+                <textarea placeholder="Registre sus observaciones aquí..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Casos de escalamiento innecesario -->
+        <div class="section">
+            <div class="section-header">Casos de Escalamiento Potencialmente Innecesario</div>
+            
+            <div class="unnecessary-cases">
+                <h4>Identificación y Descripción de Casos</h4>
+                <p style="font-size: 12px; margin-bottom: 15px; color: #555;">
+                    Identifique casos donde, desde la observación objetiva, el escalamiento a campo pareciera innecesario. Documente mínimo 3 casos específicos.
+                </p>
+                
+                <div class="case-card">
+                    <label>Caso N°:</label>
+                    <input type="text" placeholder="Ej: 007">
+                    
+                    <label>Descripción del incidente:</label>
+                    <textarea placeholder="Detalle qué problema reportó el cliente"></textarea>
+                    
+                    <label>Razón del escalamiento (según operador):</label>
+                    <input type="text" placeholder="¿Por qué el operador decidió escalar?">
+                    
+                    <label>Por qué podría haberse resuelto remotamente:</label>
+                    <textarea placeholder="Análisis objetivo de por qué no era necesario el desplazamiento"></textarea>
+                    
+                    <label>Herramientas que podrían haber ayudado:</label>
+                    <input type="text" placeholder="Ej: Remote Help + System Center">
+                </div>
+                
+                <div class="case-card">
+                    <label>Caso N°:</label>
+                    <input type="text" placeholder="Ej: 015">
+                    
+                    <label>Descripción del incidente:</label>
+                    <textarea placeholder="Detalle qué problema reportó el cliente"></textarea>
+                    
+                    <label>Razón del escalamiento (según operador):</label>
+                    <input type="text" placeholder="¿Por qué el operador decidió escalar?">
+                    
+                    <label>Por qué podría haberse resuelto remotamente:</label>
+                    <textarea placeholder="Análisis objetivo de por qué no era necesario el desplazamiento"></textarea>
+                    
+                    <label>Herramientas que podrían haber ayudado:</label>
+                    <input type="text" placeholder="Ej: Remote Help + System Center">
+                </div>
+                
+                <div class="case-card">
+                    <label>Caso N°:</label>
+                    <input type="text" placeholder="Ej: 023">
+                    
+                    <label>Descripción del incidente:</label>
+                    <textarea placeholder="Detalle qué problema reportó el cliente"></textarea>
+                    
+                    <label>Razón del escalamiento (según operador):</label>
+                    <input type="text" placeholder="¿Por qué el operador decidió escalar?">
+                    
+                    <label>Por qué podría haberse resuelto remotamente:</label>
+                    <textarea placeholder="Análisis objetivo de por qué no era necesario el desplazamiento"></textarea>
+                    
+                    <label>Herramientas que podrían haber ayudado:</label>
+                    <input type="text" placeholder="Ej: Remote Help + System Center">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Observaciones generales -->
+        <div class="section">
+            <div class="section-header">Observaciones Generales y Reflexiones del Observador</div>
+            
+            <div class="observation-box">
+                <h4>Patrones Identificados</h4>
+                <textarea placeholder="¿Qué patrones recurrentes observó durante la jornada? (ej: mayor escalamiento en horas pico, diferencias entre operadores novatos y experimentados, etc.)"></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>Factores Contextuales Relevantes</h4>
+                <textarea placeholder="¿Qué factores del entorno influyeron en las observaciones? (ej: sistema caído, ausencia de personal clave, fecha límite importante, etc.)"></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>Diferencias entre Operadores</h4>
+                <textarea placeholder="¿Observó diferencias significativas en cómo diferentes operadores manejan situaciones similares?"></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>Hallazgos No Anticipados</h4>
+                <textarea placeholder="¿Descubrió aspectos del proceso que no estaban contemplados en el marco teórico del estudio?"></textarea>
+            </div>
+            
+            <div class="observation-box">
+                <h4>Recomendaciones Preliminares</h4>
+                <textarea placeholder="Basándose en lo observado, ¿qué recomendaciones preliminares surgen para optimizar el proceso?"></textarea>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Proyecto: Implementar y Optimizar el Soporte Técnico en Campo mediante Soluciones Digitales</p>
+            <p>Corporación Unificada Nacional de Educación Superior - CUN | Especialización en Transformación Digital</p>
+            <p>Investigador: Jose Jesus Urzola Gomez | Septiembre 2025</p>
+        </div>
+    </div>
+    
+    <script>
+        // Función para agregar filas dinámicamente
+        function agregarFila() {
+            const tbody = document.getElementById('casesTableBody');
+            const rowCount = tbody.rows.length;
+            const newRowNumber = String(rowCount + 1).padStart(3, '0');
+            
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td>${newRowNumber}</td>
+                <td><input type="time"></td>
+                <td>
+                    <select>
+                        <option value="">-</option>
+                        <option value="L">Llamada</option>
+                        <option value="C">Chat</option>
+                        <option value="A">Autogestión</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="">-</option>
+                        <option value="SW">Software</option>
+                        <option value="HW">Hardware</option>
+                        <option value="RED">Red</option>
+                        <option value="IMP">Impresoras</option>
+                        <option value="CFG">Configuración</option>
+                        <option value="REMP">Reemplazo</option>
+                    </select>
+                </td>
+                <td><input type="text" placeholder="Descripción breve"></td>
+                <td>
+                    <select class="accion-select">
+                        <option value="">-</option>
+                        <option value="RN1">Resuelto N1</option>
+                        <option value="EN2">Escalado N2</option>
+                        <option value="ECAMPO">Escalado Campo</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="">Ninguna</option>
+                        <option value="RH">Remote Help</option>
+                        <option value="Teams">Teams</option>
+                        <option value="SC">System Center</option>
+                    </select>
+                </td>
+                <td><input type="text" placeholder="15"></td>
+                <td><input type="text" placeholder="Contexto relevante"></td>
+            `;
+            
+            // Scroll suave a la nueva fila
+            newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // Función para calcular estadísticas
+        function calcularEstadisticas() {
+            const selects = document.querySelectorAll('.accion-select');
+            let totalCasos = 0;
+            let resueltosN1 = 0;
+            let escaladosN2 = 0;
+            let escaladosCampo = 0;
+            
+            selects.forEach(select => {
+                const value = select.value;
+                if (value !== '') {
+                    totalCasos++;
+                    if (value === 'RN1') resueltosN1++;
+                    if (value === 'EN2') escaladosN2++;
+                    if (value === 'ECAMPO') escaladosCampo++;
+                }
+            });
+            
+            document.getElementById('total-casos').textContent = totalCasos;
+            document.getElementById('resueltos-n1').textContent = resueltosN1;
+            document.getElementById('escalados-n2').textContent = escaladosN2;
+            document.getElementById('escalados-campo').textContent = escaladosCampo;
+            
+            // Mostrar mensaje
+            if (totalCasos > 0) {
+                const porcentajeCampo = ((escaladosCampo / totalCasos) * 100).toFixed(1);
+                alert(`📊 Estadísticas calculadas:\n\n` +
+                      `Total de casos registrados: ${totalCasos}\n` +
+                      `Resueltos en Nivel 1: ${resueltosN1} (${((resueltosN1/totalCasos)*100).toFixed(1)}%)\n` +
+                      `Escalados a Nivel 2: ${escaladosN2} (${((escaladosN2/totalCasos)*100).toFixed(1)}%)\n` +
+                      `Escalados a Campo: ${escaladosCampo} (${porcentajeCampo}%)\n\n` +
+                      `Las estadísticas se han actualizado en el resumen.`);
+            } else {
+                alert('⚠️ No hay casos registrados todavía. Complete la tabla de casos para calcular estadísticas.');
+            }
+        }
+        
+        // Función para guardar observación
+        function guardarObservacion() {
+            const fecha = document.getElementById('fecha').value || 'sin_fecha';
+            const container = document.querySelector('.container');
+            const html = container.innerHTML;
+            localStorage.setItem('observacion_' + fecha, html);
+            alert('✅ Observación guardada correctamente.\n\nFecha: ' + fecha + '\n\nRecuerde también guardar como PDF usando la función de imprimir.');
+        }
+        
+        // Auto-guardar cada 10 minutos
+        setInterval(function() {
+            const container = document.querySelector('.container');
+            const html = container.innerHTML;
+            localStorage.setItem('observacion_autosave', html);
+            console.log('Auto-guardado:', new Date().toLocaleTimeString());
+        }, 600000); // 10 minutos
+        
+        // Cargar auto-guardado si existe
+        window.addEventListener('load', function() {
+            const autoSaved = localStorage.getItem('observacion_autosave');
+            if (autoSaved) {
+                if (confirm('Se encontró un auto-guardado previo. ¿Desea restaurarlo?')) {
+                    document.querySelector('.container').innerHTML = autoSaved;
+                }
+            }
+            
+            // Establecer fecha actual por defecto
+            const fechaInput = document.getElementById('fecha');
+            if (!fechaInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+        });
+        
+        // Advertencia al cerrar
+        window.addEventListener('beforeunload', function(e) {
+            const selects = document.querySelectorAll('.accion-select');
+            let hasData = false;
+            
+            selects.forEach(select => {
+                if (select.value !== '') {
+                    hasData = true;
+                }
+            });
+            
+            if (hasData) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        // Agregar 10 filas iniciales al cargar
+        window.addEventListener('load', function() {
+            for (let i = 0; i < 9; i++) {
+                agregarFila();
+            }
+        });
+    </script>
+</body>
+</html>
