@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de KPIs - Gestión de Incidentes</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .disclaimer {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            color: #856404;
+        }
+        
+        .disclaimer strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #664d03;
+            font-size: 15px;
+        }
+        
+        .disclaimer p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+        
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+        
+        .kpi-card.success::before {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+        }
+        
+        .kpi-card.warning::before {
+            background: linear-gradient(90deg, #ed8936, #dd6b20);
+        }
+        
+        .kpi-card.info::before {
+            background: linear-gradient(90deg, #4299e1, #3182ce);
+        }
+        
+        .kpi-card.danger::before {
+            background: linear-gradient(90deg, #f56565, #e53e3e);
+        }
+        
+        .kpi-label {
+            font-size: 13px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .kpi-change {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .kpi-change.positive {
+            color: #38a169;
+        }
+        
+        .kpi-change.negative {
+            color: #e53e3e;
+        }
+        
+        .kpi-target {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .chart-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .data-table {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f7fafc;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        td {
+            padding: 12px;
+            font-size: 14px;
+            color: #2d3748;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f7fafc;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-badge.green {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-badge.yellow {
+            background: #feebc8;
+            color: #744210;
+        }
+        
+        .status-badge.red {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .insights-section {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #81e6d9;
+        }
+        
+        .insights-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #234e52;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .insight-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #38b2ac;
+            font-size: 14px;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .filters {
+                display: none;
+            }
+            
+            .kpi-card:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard de KPIs - Gestión de Incidentes</h1>
+            <p>Sistema de Monitoreo y Análisis de Desempeño</p>
+        </div>
+        
+        <div class="disclaimer">
+            <strong>⚠️ Nota Aclaratoria:</strong>
+            <p>Este documento constituye un <strong>prototipo funcional</strong> que ejemplifica cómo podría visualizarse el entregable "Dashboard de Métricas en Tiempo Real" propuesto en las recomendaciones de implementación (Sección 10.5). Fue desarrollado con fines ilustrativos para demostrar la viabilidad técnica de la propuesta. Los datos presentados son <strong>simulados con fines demostrativos</strong> y representan un escenario proyectado post-implementación de la metodología. Los valores reales solo podrán obtenerse mediante la operación efectiva del proceso optimizado.</p>
+        </div>
+        
+        <!-- Filtros -->
+        <div class="filters">
+            <div class="filter-group">
+                <label>Período de Análisis</label>
+                <select id="periodFilter" onchange="updateDashboard()">
+                    <option value="week">Última Semana</option>
+                    <option value="month" selected>Último Mes</option>
+                    <option value="quarter">Último Trimestre</option>
+                    <option value="year">Último Año</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Cliente</label>
+                <select id="clientFilter" onchange="updateDashboard()">
+                    <option value="all">Todos los Clientes</option>
+                    <option value="client1">Cliente A - Sincelejo</option>
+                    <option value="client2">Cliente B - Montería</option>
+                    <option value="client3">Cliente C - Corozal</option>
+                    <option value="client4">Cliente D - Tolú</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Categoría</label>
+                <select id="categoryFilter" onchange="updateDashboard()">
+                    <option value="all">Todas las Categorías</option>
+                    <option value="hardware">Hardware</option>
+                    <option value="software">Software</option>
+                    <option value="network">Red/Conectividad</option>
+                    <option value="application">Aplicaciones</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- KPIs Principales -->
+        <div class="kpi-grid">
+            <div class="kpi-card success">
+                <div class="kpi-label">Tasa de Resolución Remota</div>
+                <div class="kpi-value">68%</div>
+                <div class="kpi-change positive">
+                    ↑ +30% vs baseline (38%)
+                </div>
+                <div class="kpi-target">Meta: ≥60% | Estado: ✓ Cumpliendo</div>
+            </div>
+            
+            <div class="kpi-card success">
+                <div class="kpi-label">Cumplimiento de SLA</div>
+                <div class="kpi-value">87%</div>
+                <div class="kpi-change positive">
+                    ↑ +20pts vs baseline (67%)
+                </div>
+                <div class="kpi-target">Meta: ≥85% | Estado: ✓ Cumpliendo</div>
+            </div>
+            
+            <div class="kpi-card info">
+                <div class="kpi-label">Tasa de Escalamiento a Campo</div>
+                <div class="kpi-value">32%</div>
+                <div class="kpi-change positive">
+                    ↓ -30pts vs baseline (62%)
+                </div>
+                <div class="kpi-target">Meta: ≤40% | Estado: ✓ Cumpliendo</div>
+            </div>
+            
+            <div class="kpi-card warning">
+                <div class="kpi-label">Tiempo Promedio Resolución</div>
+                <div class="kpi-value">5.2h</div>
+                <div class="kpi-change positive">
+                    ↓ -1.6h vs baseline (6.8h)
+                </div>
+                <div class="kpi-target">Meta: ≤5.5h | Estado: ✓ Cumpliendo</div>
+            </div>
+        </div>
+        
+        <!-- Insights Automáticos -->
+        <div class="insights-section">
+            <div class="insights-title">💡 Insights Automáticos</div>
+            <div class="insight-item">
+                <strong>Mejora Destacada:</strong> La tasa de resolución remota aumentó 30 puntos porcentuales, superando la meta del 60%. Esto representa una reducción significativa en desplazamientos físicos.
+            </div>
+            <div class="insight-item">
+                <strong>Oportunidad Detectada:</strong> Los incidentes de categoría "Software" tienen una tasa de resolución remota del 85%, sugiriendo que esta categoría es ideal para el soporte digital.
+            </div>
+            <div class="insight-item">
+                <strong>Área de Atención:</strong> Los martes entre 9-11am presentan el mayor volumen de incidentes. Considere reforzar el equipo en ese horario.
+            </div>
+        </div>
+        
+        <!-- Gráficos -->
+        <div class="chart-grid">
+            <div class="chart-section">
+                <div class="chart-title">📈 Evolución Mensual de KPIs</div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-section">
+                <div class="chart-title">🎯 Comparativo: Situación Actual vs Proyectada</div>
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">📊 Distribución por Categoría de Incidente</div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4299e1;"></div>
+                    <span>Hardware (28%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #48bb78;"></div>
+                    <span>Software (35%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ed8936;"></div>
+                    <span>Red/Conectividad (22%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9f7aea;"></div>
+                    <span>Aplicaciones (15%)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">⏱️ Tiempo Promedio de Resolución por Categoría</div>
+            <div class="chart-container">
+                <canvas id="resolutionTimeChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Tabla de Datos -->
+        <div class="data-table">
+            <div class="table-title">📋 Resumen Detallado por Cliente (Último Mes)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Total Incidentes</th>
+                        <th>Resueltos Remoto</th>
+                        <th>Escalados Campo</th>
+                        <th>SLA Cumplido</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cliente A - Sincelejo</td>
+                        <td>124</td>
+                        <td>89 (72%)</td>
+                        <td>35 (28%)</td>
+                        <td>92%</td>
+                        <td><span class="status-badge green">Excelente</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cliente B - Montería</td>
+                        <td>98</td>
+                        <td>68 (69%)</td>
+                        <td>30 (31%)</td>
+                        <td>88%</td>
+                        <td><span class="status-badge green">Excelente</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cliente C - Corozal</td>
+                        <td>76</td>
+                        <td>50 (66%)</td>
+                        <td>26 (34%)</td>
+                        <td>84%</td>
+                        <td><span class="status-badge yellow">Bueno</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cliente D - Tolú</td>
+                        <td>62</td>
+                        <td>38 (61%)</td>
+                        <td>24 (39%)</td>
+                        <td>81%</td>
+                        <td><span class="status-badge yellow">Bueno</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cliente E - San Marcos</td>
+                        <td>45</td>
+                        <td>27 (60%)</td>
+                        <td>18 (40%)</td>
+                        <td>78%</td>
+                        <td><span class="status-badge yellow">Bueno</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cliente F - Caucasia</td>
+                        <td>38</td>
+                        <td>20 (53%)</td>
+                        <td>18 (47%)</td>
+                        <td>74%</td>
+                        <td><span class="status-badge red">A Mejorar</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">🗺️ Incidentes por Localidad (Distribución Geográfica)</div>
+            <div class="chart-container">
+                <canvas id="locationChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuración global de Chart.js
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.font.size = 12;
+        
+        // Gráfico de Tendencias
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                datasets: [{
+                    label: 'Resolución Remota (%)',
+                    data: [62, 65, 67, 68],
+                    borderColor: '#48bb78',
+                    backgroundColor: 'rgba(72, 187, 120, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Cumplimiento SLA (%)',
+                    data: [82, 84, 86, 87],
+                    borderColor: '#4299e1',
+                    backgroundColor: 'rgba(66, 153, 225, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Escalamiento Campo (%)',
+                    data: [38, 35, 33, 32],
+                    borderColor: '#f56565',
+                    backgroundColor: 'rgba(245, 101, 101, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // Gráfico Comparativo
+        const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+        const comparisonChart = new Chart(comparisonCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Resolución Remota', 'Cumplimiento SLA', 'Escalamiento Campo', 'Tiempo Resolución'],
+                datasets: [{
+                    label: 'Situación Inicial (Baseline)',
+                    data: [38, 67, 62, 6.8],
+                    backgroundColor: '#cbd5e0'
+                }, {
+                    label: 'Situación Proyectada',
+                    data: [68, 87, 32, 5.2],
+                    backgroundColor: '#667eea'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Gráfico por Categoría
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Hardware', 'Software', 'Red/Conectividad', 'Aplicaciones'],
+                datasets: [{
+                    data: [124, 156, 98, 67],
+                    backgroundColor: ['#4299e1', '#48bb78', '#ed8936', '#9f7aea']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        // Gráfico Tiempo de Resolución
+        const resolutionTimeCtx = document.getElementById('resolutionTimeChart').getContext('2d');
+        const resolutionTimeChart = new Chart(resolutionTimeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Hardware', 'Software', 'Red/Conectividad', 'Aplicaciones'],
+                datasets: [{
+                    label: 'Tiempo Promedio (horas)',
+                    data: [6.2, 3.8, 5.5, 4.1],
+                    backgroundColor: ['#4299e1', '#48bb78', '#ed8936', '#9f7aea']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Horas'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Gráfico por Localidad
+        const locationCtx = document.getElementById('locationChart').getContext('2d');
+        const locationChart = new Chart(locationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Sincelejo', 'Montería', 'Corozal', 'Tolú', 'San Marcos', 'Caucasia'],
+                datasets: [{
+                    label: 'Total Incidentes',
+                    data: [124, 98, 76, 62, 45, 38],
+                    backgroundColor: '#667eea'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Función para actualizar dashboard (simulación)
+        function updateDashboard() {
+            const period = document.getElementById('periodFilter').value;
+            const client = document.getElementById('clientFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            
+            // En una implementación real, aquí se harían llamadas AJAX para obtener datos filtrados
+            console.log('Filtros aplicados:', { period, client, category });
+            
+            // Simulación: mostrar alerta
+            // alert('Dashboard actualizado con filtros:\nPeríodo: ' + period + '\nCliente: ' + client + '\nCategoría: ' + category);
+        }
+    </script>
+</body>
+</html>
