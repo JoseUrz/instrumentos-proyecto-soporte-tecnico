@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Diagnóstico Remoto - Prototipo Funcional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .disclaimer {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px;
+            color: #856404;
+        }
+        
+        .disclaimer strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #664d03;
+        }
+        
+        .disclaimer p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .incident-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .checklist-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .checklist-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .question-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+        
+        .question-text {
+            display: inline;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .question-options {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .radio-option {
+            flex: 1;
+        }
+        
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+        
+        .radio-option label {
+            display: block;
+            padding: 12px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .radio-option input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .radio-option label:hover {
+            border-color: #667eea;
+        }
+        
+        .textarea-field {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 70px;
+        }
+        
+        .progress-section {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .progress-label {
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .progress-bar-container {
+            background: #e2e8f0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result-section.show {
+            display: block;
+        }
+        
+        .result-card {
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-card.resolution {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .result-card.escalation {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+        
+        .result-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .result-message {
+            font-size: 15px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .result-details {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .detail-value {
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .summary-section {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item {
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .question-options {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .action-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Checklist de Diagnóstico Remoto</h1>
+            <p>Sistema de Evaluación para Gestión de Incidentes de TI</p>
+        </div>
+        
+        <div class="disclaimer">
+            <strong>⚠️ Nota Aclaratoria:</strong>
+            <p>Este documento constituye un <strong>prototipo funcional</strong> que ejemplifica cómo podría implementarse el entregable "Checklist de Diagnóstico Remoto Obligatorio" propuesto en la Fase 2 de la metodología (Sección 9.7.2). Fue desarrollado con fines ilustrativos para demostrar la viabilidad técnica de la propuesta. Los criterios y preguntas presentados son ejemplos que deberían personalizarse según las necesidades específicas de cada organización.</p>
+        </div>
+        
+        <div class="content">
+            <!-- Información del Incidente -->
+            <div class="incident-info">
+                <h2 style="font-size: 18px; color: #2d3748; margin-bottom: 20px;">📝 Información del Incidente</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ID Incidente *</label>
+                        <input type="text" id="incidentId" placeholder="Ej: INC-2025-001234" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cliente *</label>
+                        <input type="text" id="clientName" placeholder="Nombre del cliente" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Técnico Asignado *</label>
+                        <input type="text" id="technicianName" placeholder="Nombre del técnico" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Categoría de Incidente *</label>
+                        <select id="incidentCategory" required>
+                            <option value="">Seleccione una categoría...</option>
+                            <option value="hardware">Hardware</option>
+                            <option value="software">Software</option>
+                            <option value="network">Red/Conectividad</option>
+                            <option value="application">Aplicaciones</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descripción Breve del Problema *</label>
+                    <textarea id="problemDescription" rows="3" placeholder="Describa brevemente el problema reportado..." required></textarea>
+                </div>
+            </div>
+            
+            <!-- Checklist Hardware -->
+            <div id="checklistHardware" class="checklist-section">
+                <div class="section-title">🖥️ Checklist: Hardware</div>
+                
+                <div class="question-card">
+                    <span class="question-number">1</span>
+                    <span class="question-text">¿El equipo enciende y muestra señal de video?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="hw1_yes" name="hw_question1" value="yes">
+                            <label for="hw1_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw1_no" name="hw_question1" value="no">
+                            <label for="hw1_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw1_partial" name="hw_question1" value="partial">
+                            <label for="hw1_partial">⚠ Parcialmente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Observaciones adicionales..." data-question="hw1"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">2</span>
+                    <span class="question-text">¿Es posible establecer conexión remota con el equipo?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="hw2_yes" name="hw_question2" value="yes">
+                            <label for="hw2_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw2_no" name="hw_question2" value="no">
+                            <label for="hw2_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Observaciones adicionales..." data-question="hw2"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">3</span>
+                    <span class="question-text">¿Los componentes internos están correctamente conectados (verificable remotamente vía software)?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="hw3_yes" name="hw_question3" value="yes">
+                            <label for="hw3_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw3_no" name="hw_question3" value="no">
+                            <label for="hw3_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw3_na" name="hw_question3" value="na">
+                            <label for="hw3_na">N/A</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Observaciones adicionales..." data-question="hw3"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">4</span>
+                    <span class="question-text">¿El problema requiere reemplazo físico de componentes?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="hw4_yes" name="hw_question4" value="yes">
+                            <label for="hw4_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw4_no" name="hw_question4" value="no">
+                            <label for="hw4_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw4_maybe" name="hw_question4" value="maybe">
+                            <label for="hw4_maybe">⚠ Posiblemente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Observaciones adicionales..." data-question="hw4"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">5</span>
+                    <span class="question-text">¿Se realizaron diagnósticos de hardware vía software (ej: chequeo de disco, memoria, temperatura)?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="hw5_yes" name="hw_question5" value="yes">
+                            <label for="hw5_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="hw5_no" name="hw_question5" value="no">
+                            <label for="hw5_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Resultados del diagnóstico..." data-question="hw5"></textarea>
+                </div>
+            </div>
+            
+            <!-- Checklist Software -->
+            <div id="checklistSoftware" class="checklist-section">
+                <div class="section-title">💻 Checklist: Software</div>
+                
+                <div class="question-card">
+                    <span class="question-number">1</span>
+                    <span class="question-text">¿El sistema operativo inicia correctamente?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="sw1_yes" name="sw_question1" value="yes">
+                            <label for="sw1_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw1_no" name="sw_question1" value="no">
+                            <label for="sw1_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw1_partial" name="sw_question1" value="partial">
+                            <label for="sw1_partial">⚠ Con errores</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Observaciones adicionales..." data-question="sw1"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">2</span>
+                    <span class="question-text">¿El problema es reproducible de forma remota?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="sw2_yes" name="sw_question2" value="yes">
+                            <label for="sw2_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw2_no" name="sw_question2" value="no">
+                            <label for="sw2_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Pasos para reproducir..." data-question="sw2"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">3</span>
+                    <span class="question-text">¿Se verificaron los logs de error del sistema/aplicación?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="sw3_yes" name="sw_question3" value="yes">
+                            <label for="sw3_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw3_no" name="sw_question3" value="no">
+                            <label for="sw3_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Errores encontrados..." data-question="sw3"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">4</span>
+                    <span class="question-text">¿Se intentó reinstalar/reparar la aplicación problemática?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="sw4_yes" name="sw_question4" value="yes">
+                            <label for="sw4_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw4_no" name="sw_question4" value="no">
+                            <label for="sw4_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw4_na" name="sw_question4" value="na">
+                            <label for="sw4_na">N/A</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Resultado del intento..." data-question="sw4"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">5</span>
+                    <span class="question-text">¿El problema requiere intervención física (ej: instalación desde USB booteable)?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="sw5_yes" name="sw_question5" value="yes">
+                            <label for="sw5_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw5_no" name="sw_question5" value="no">
+                            <label for="sw5_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="sw5_maybe" name="sw_question5" value="maybe">
+                            <label for="sw5_maybe">⚠ Posiblemente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Justificación..." data-question="sw5"></textarea>
+                </div>
+            </div>
+            
+            <!-- Checklist Red -->
+            <div id="checklistNetwork" class="checklist-section">
+                <div class="section-title">🌐 Checklist: Red/Conectividad</div>
+                
+                <div class="question-card">
+                    <span class="question-number">1</span>
+                    <span class="question-text">¿El equipo tiene conectividad a la red local?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="net1_yes" name="net_question1" value="yes">
+                            <label for="net1_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net1_no" name="net_question1" value="no">
+                            <label for="net1_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net1_intermittent" name="net_question1" value="intermittent">
+                            <label for="net1_intermittent">⚠ Intermitente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Detalles de conectividad..." data-question="net1"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">2</span>
+                    <span class="question-text">¿Se realizaron pruebas de ping y traceroute a recursos críticos?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="net2_yes" name="net_question2" value="yes">
+                            <label for="net2_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net2_no" name="net_question2" value="no">
+                            <label for="net2_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Resultados de las pruebas..." data-question="net2"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">3</span>
+                    <span class="question-text">¿La configuración de red (IP, DNS, Gateway) es correcta?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="net3_yes" name="net_question3" value="yes">
+                            <label for="net3_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net3_no" name="net_question3" value="no">
+                            <label for="net3_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net3_na" name="net_question3" value="na">
+                            <label for="net3_na">No verificado</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Configuración actual..." data-question="net3"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">4</span>
+                    <span class="question-text">¿El problema requiere verificación física de cableado o router?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="net4_yes" name="net_question4" value="yes">
+                            <label for="net4_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net4_no" name="net_question4" value="no">
+                            <label for="net4_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net4_maybe" name="net_question4" value="maybe">
+                            <label for="net4_maybe">⚠ Posiblemente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Justificación..." data-question="net4"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">5</span>
+                    <span class="question-text">¿Se reinició el equipo de red (switch/router) remotamente o mediante usuario?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="net5_yes" name="net_question5" value="yes">
+                            <label for="net5_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net5_no" name="net_question5" value="no">
+                            <label for="net5_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="net5_na" name="net_question5" value="na">
+                            <label for="net5_na">N/A</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Resultado del reinicio..." data-question="net5"></textarea>
+                </div>
+            </div>
+            
+            <!-- Checklist Aplicaciones -->
+            <div id="checklistApplication" class="checklist-section">
+                <div class="section-title">📱 Checklist: Aplicaciones</div>
+                
+                <div class="question-card">
+                    <span class="question-number">1</span>
+                    <span class="question-text">¿La aplicación inicia correctamente?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="app1_yes" name="app_question1" value="yes">
+                            <label for="app1_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app1_no" name="app_question1" value="no">
+                            <label for="app1_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app1_error" name="app_question1" value="error">
+                            <label for="app1_error">⚠ Con error</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Mensaje de error si aplica..." data-question="app1"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">2</span>
+                    <span class="question-text">¿Se verificó que la aplicación tiene la versión más reciente?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="app2_yes" name="app_question2" value="yes">
+                            <label for="app2_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app2_no" name="app_question2" value="no">
+                            <label for="app2_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Versión actual..." data-question="app2"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">3</span>
+                    <span class="question-text">¿Se limpió la caché/datos temporales de la aplicación?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="app3_yes" name="app_question3" value="yes">
+                            <label for="app3_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app3_no" name="app_question3" value="no">
+                            <label for="app3_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Resultado..." data-question="app3"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">4</span>
+                    <span class="question-text">¿El problema está relacionado con permisos o credenciales?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="app4_yes" name="app_question4" value="yes">
+                            <label for="app4_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app4_no" name="app_question4" value="no">
+                            <label for="app4_no">✗ No</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app4_maybe" name="app_question4" value="maybe">
+                            <label for="app4_maybe">⚠ Posiblemente</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Detalles..." data-question="app4"></textarea>
+                </div>
+                
+                <div class="question-card">
+                    <span class="question-number">5</span>
+                    <span class="question-text">¿Se consultó la base de conocimiento para casos similares?</span>
+                    <div class="question-options">
+                        <div class="radio-option">
+                            <input type="radio" id="app5_yes" name="app_question5" value="yes">
+                            <label for="app5_yes">✓ Sí</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="app5_no" name="app_question5" value="no">
+                            <label for="app5_no">✗ No</label>
+                        </div>
+                    </div>
+                    <textarea class="textarea-field" placeholder="Soluciones encontradas..." data-question="app5"></textarea>
+                </div>
+            </div>
+            
+            <!-- Barra de progreso -->
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-label">
+                    Completitud del Checklist: <span id="progressText">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">0%</div>
+                </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+                <button class="btn btn-secondary" onclick="resetForm()">🔄 Reiniciar</button>
+                <button class="btn btn-primary" id="evaluateBtn" onclick="evaluateChecklist()">🎯 Evaluar Diagnóstico</button>
+            </div>
+            
+            <!-- Sección de resultados -->
+            <div class="result-section" id="resultSection">
+                <div class="result-card" id="resultCard">
+                    <div class="result-icon" id="resultIcon">✓</div>
+                    <div class="result-title" id="resultTitle">Título del resultado</div>
+                    <div class="result-message" id="resultMessage">Mensaje del resultado</div>
+                </div>
+                
+                <div class="result-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Completitud:</span>
+                        <span class="detail-value" id="detailCompleteness">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Decisión:</span>
+                        <span class="detail-value" id="detailDecision">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tiempo de Evaluación:</span>
+                        <span class="detail-value" id="detailTime">-</span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-title">📌 Resumen de Verificaciones</div>
+                    <div id="summaryContent"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="printResults()">🖨️ Imprimir</button>
+                    <button class="btn btn-primary" onclick="resetForm()">✏️ Nuevo Checklist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let startTime = null;
+        let currentCategory = '';
+        
+        // Listener para cambio de categoría
+        document.getElementById('incidentCategory').addEventListener('change', function() {
+            const category = this.value;
+            currentCategory = category;
+            
+            // Ocultar todos los checklists
+            document.querySelectorAll('.checklist-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar el checklist correspondiente
+            if (category) {
+                const checklistId = 'checklist' + category.charAt(0).toUpperCase() + category.slice(1);
+                const checklistElement = document.getElementById(checklistId);
+                if (checklistElement) {
+                    checklistElement.classList.add('active');
+                    document.getElementById('progressSection').style.display = 'block';
+                    document.getElementById('actionButtons').style.display = 'flex';
+                    document.getElementById('resultSection').classList.remove('show');
+                    startTime = new Date();
+                    updateProgress();
+                }
+            } else {
+                document.getElementById('progressSection').style.display = 'none';
+                document.getElementById('actionButtons').style.display = 'none';
+            }
+        });
+        
+        // Listener para cambios en las respuestas
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'radio') {
+                updateProgress();
+            }
+        });
+        
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const activeChecklist = document.querySelector('.checklist-section.active');
+            if (!activeChecklist) return;
+            
+            const totalQuestions = activeChecklist.querySelectorAll('.question-card').length;
+            const answeredQuestions = activeChecklist.querySelectorAll('input[type="radio"]:checked').length;
+            const percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+            
+            // Habilitar botón de evaluación solo si está completo
+            document.getElementById('evaluateBtn').disabled = percentage < 100;
+        }
+        
+        // Evaluar el checklist
+        function evaluateChecklist() {
+            if (!validateBasicInfo()) {
+                alert('Por favor complete toda la información del incidente antes de evaluar.');
+                return;
+            }
+            
+            const activeChecklist = document.querySelector('.checklist-section.active');
+            if (!activeChecklist) return;
+            
+            const answers = [];
+            const questions = activeChecklist.querySelectorAll('.question-card');
+            
+            questions.forEach((question, index) => {
+                const selectedRadio = question.querySelector('input[type="radio"]:checked');
+                const textarea = question.querySelector('.textarea-field');
+                
+                answers.push({
+                    question: index + 1,
+                    answer: selectedRadio ? selectedRadio.value : 'unanswered',
+                    observation: textarea ? textarea.value : ''
+                });
+            });
+            
+            // Lógica de evaluación según categoría
+            const decision = evaluateByCategory(currentCategory, answers);
+            
+            // Calcular tiempo
+            const endTime = new Date();
+            const timeDiff = Math.round((endTime - startTime) / 1000 / 60); // minutos
+            
+            // Mostrar resultados
+            showResults(decision, answers, timeDiff);
+        }
+        
+        // Validar información básica
+        function validateBasicInfo() {
+            const incidentId = document.getElementById('incidentId').value;
+            const clientName = document.getElementById('clientName').value;
+            const technicianName = document.getElementById('technicianName').value;
+            const problemDescription = document.getElementById('problemDescription').value;
+            
+            return incidentId && clientName && technicianName && problemDescription;
+        }
+        
+        // Lógica de evaluación por categoría
+        function evaluateByCategory(category, answers) {
+            let escalationNeeded = false;
+            let reasons = [];
+            
+            switch(category) {
+                case 'hardware':
+                    // Criterio: Si no enciende o requiere reemplazo físico
+                    if (answers[0].answer === 'no') {
+                        escalationNeeded = true;
+                        reasons.push('Equipo no enciende (requiere diagnóstico físico)');
+                    }
+                    if (answers[1].answer === 'no') {
+                        escalationNeeded = true;
+                        reasons.push('No es posible conexión remota');
+                    }
+                    if (answers[3].answer === 'yes') {
+                        escalationNeeded = true;
+                        reasons.push('Requiere reemplazo físico de componentes');
+                    }
+                    break;
+                    
+                case 'software':
+                    // Criterio: Si no inicia SO o requiere intervención física
+                    if (answers[0].answer === 'no') {
+                        escalationNeeded = true;
+                        reasons.push('Sistema operativo no inicia');
+                    }
+                    if (answers[4].answer === 'yes') {
+                        escalationNeeded = true;
+                        reasons.push('Requiere intervención física (USB booteable)');
+                    }
+                    break;
+                    
+                case 'network':
+                    // Criterio: Si requiere verificación física
+                    if (answers[0].answer === 'no') {
+                        escalationNeeded = true;
+                        reasons.push('Sin conectividad de red local');
+                    }
+                    if (answers[3].answer === 'yes') {
+                        escalationNeeded = true;
+                        reasons.push('Requiere verificación física de cableado/router');
+                    }
+                    break;
+                    
+                case 'application':
+                    // Criterio: Generalmente resoluble remotamente
+                    // Escalar solo si es crítico y no se pudo resolver
+                    const unresolvedCritical = answers[0].answer === 'no' && answers[4].answer === 'no';
+                    if (unresolvedCritical) {
+                        escalationNeeded = true;
+                        reasons.push('Aplicación no inicia y no se encontró solución en base de conocimiento');
+                    }
+                    break;
+            }
+            
+            return {
+                escalate: escalationNeeded,
+                reasons: reasons,
+                canResolveRemotely: !escalationNeeded
+            };
+        }
+        
+        // Mostrar resultados
+        function showResults(decision, answers, time) {
+            const resultSection = document.getElementById('resultSection');
+            const resultCard = document.getElementById('resultCard');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            const incidentId = document.getElementById('incidentId').value;
+            const completeness = document.getElementById('progressText').textContent;
+            
+            if (decision.escalate) {
+                // Resultado: ESCALAR A CAMPO
+                resultCard.className = 'result-card escalation';
+                resultIcon.textContent = '⚠️';
+                resultTitle.textContent = 'Escalamiento a Campo Requerido';
+                resultMessage.innerHTML = `
+                    <strong>El diagnóstico remoto indica que este incidente requiere atención física en sitio.</strong><br><br>
+                    Razones identificadas:<br>
+                    ${decision.reasons.map(r => '• ' + r).join('<br>')}
+                `;
+                
+                document.getElementById('detailDecision').textContent = 'ESCALAR A CAMPO';
+                document.getElementById('detailDecision').style.color = '#e53e3e';
+            } else {
+                // Resultado: RESOLVER REMOTAMENTE
+                resultCard.className = 'result-card resolution';
+                resultIcon.textContent = '✅';
+                resultTitle.textContent = 'Resoluble Remotamente';
+                resultMessage.innerHTML = `
+                    <strong>El diagnóstico indica que este incidente puede resolverse mediante soporte remoto.</strong><br><br>
+                    Se recomienda continuar con las acciones de resolución remota según las verificaciones realizadas.
+                `;
+                
+                document.getElementById('detailDecision').textContent = 'RESOLVER REMOTO';
+                document.getElementById('detailDecision').style.color = '#38a169';
+            }
+            
+            // Detalles
+            document.getElementById('detailCompleteness').textContent = completeness;
+            document.getElementById('detailTime').textContent = time + ' minutos';
+            
+            // Resumen
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = '';
+            
+            answers.forEach((answer, index) => {
+                const answerText = getAnswerText(answer.answer);
+                const summaryItem = document.createElement('div');
+                summaryItem.className = 'summary-item';
+                summaryItem.innerHTML = `
+                    <strong>Pregunta ${answer.question}:</strong> ${answerText}
+                    ${answer.observation ? '<br><em style="font-size: 12px; color: #718096;">Obs: ' + answer.observation + '</em>' : ''}
+                `;
+                summaryContent.appendChild(summaryItem);
+            });
+            
+            // Mostrar sección de resultados
+            resultSection.classList.add('show');
+            
+            // Scroll a resultados
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Obtener texto de respuesta
+        function getAnswerText(value) {
+            const texts = {
+                'yes': '✓ Sí',
+                'no': '✗ No',
+                'partial': '⚠ Parcialmente',
+                'maybe': '⚠ Posiblemente',
+                'intermittent': '⚠ Intermitente',
+                'error': '⚠ Con error',
+                'na': 'N/A',
+                'unanswered': '(Sin responder)'
+            };
+            return texts[value] || value;
+        }
+        
+        // Reiniciar formulario
+        function resetForm() {
+            if (confirm('¿Está seguro que desea reiniciar el formulario? Se perderán todos los datos ingresados.')) {
+                document.getElementById('incidentId').value = '';
+                document.getElementById('clientName').value = '';
+                document.getElementById('technicianName').value = '';
+                document.getElementById('incidentCategory').value = '';
+                document.getElementById('problemDescription').value = '';
+                
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                document.querySelectorAll('.textarea-field').forEach(textarea => {
+                    textarea.value = '';
+                });
+                
+                document.querySelectorAll('.checklist-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById('progressSection').style.display = 'none';
+                document.getElementById('actionButtons').style.display = 'none';
+                document.getElementById('resultSection').classList.remove('show');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Imprimir resultados
+        function printResults() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
